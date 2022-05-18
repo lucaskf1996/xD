@@ -7,9 +7,8 @@ STATEMENT = ( (IDENTIFIER "⬅️" REL.EXPRESSION
               | TYPE IDENTIFIER { "👭" IDENTIFIER } ), "✋" )
             
             | FUNCTION
-              | ( "♾️" "👉" REL.EXPRESSION "👈" STATEMENT  (* while *)
-              | "🤔" "👉" REL.EXPRESSION "👈" { "🤷‍♂️" STATEMENT }*  (* if else *) 
-              | BLOCK 
+              | ( "♾️" "👉" REL.EXPRESSION "👈" BLOCK  (* while *)
+              | "🤔" "👉" REL.EXPRESSION "👈" { "🤷‍♂️" BLOCK }*  (* if else *) 
               | 🎁 ) (* return *)
 REL.EXPRESSION = EXPRESSION, { ("⬅️➡️" | "👇" | "👆"), EXPRESSION } (* == < > *)
 EXPRESSION = TERM, { ("➕" | "➖" | "🚻" | "🖇️"), TERM } (* + - or concat *)
@@ -17,7 +16,7 @@ TERM = FACTOR, { ("❌" | "➗" | "🤝"), FACTOR } (* mult div and *)
 FACTOR = ("➕" | "➖" | "❗") FACTOR | "👉" REL.EXPRESSION "👈" | IDENTIFIER | QUOTATION STR QUOTATION | INT | "⏺️" | FUNCTIONCALL;
 TYPE = 🔠
        |🔢
-STR = { (LETTER | DIGIT ) }
+STR = {(LETTER | DIGIT)+}
 INT = DIGIT { DIGIT }
 IDENTIFIER = LETTER {( LETTER | DIGIT | _ )}
 DIGIT = 0️⃣ | 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣ | 5️⃣ | 6️⃣ | 7️⃣ | 8️⃣ | 9️⃣
