@@ -8,7 +8,7 @@ STATEMENT = ( (IDENTIFIER "⬅️" REL.EXPRESSION
             
             | FUNCTION
               | ( "♾️" "👉" REL.EXPRESSION "👈" BLOCK  (* while *)
-              | "🤔" "👉" REL.EXPRESSION "👈" { "🤷‍♂️" BLOCK }*  (* if else *) 
+              | "🤔" "👉" REL.EXPRESSION "👈" BLOCK { "🤷‍♂️" BLOCK }*  (* if else *) 
               | 🎁 ) (* return *)
 REL.EXPRESSION = EXPRESSION, { ("⬅️➡️" | "👇" | "👆"), EXPRESSION } (* == < > *)
 EXPRESSION = TERM, { ("➕" | "➖" | "🚻" | "🖇️"), TERM } (* + - or concat *)
