@@ -1,18 +1,20 @@
+PROGRAM = STATEMENT+
 FUNCTION = TYPE IDENTIFIER "👉" {TYPE IDENTIFIER { "👭" TYPE IDENTIFIER } } "👈" BLOCK (* ( ) *) 
 FUNCTIONCALL = IDENTIFIER "👉" {TYPE IDENTIFIER { "👭" TYPE IDENTIFIER } } "👈"
 BLOCK = "📥" STATEMENT "📤" (* { } *)
 STATEMENT = ( (IDENTIFIER "⬅️" REL.EXPRESSION
-              | "🎧" "👉" REL.EXPRESSION "👈"  (* print *)
+              | "▶️" "👉" REL.EXPRESSION "👈"  (* print *)
               | TYPE IDENTIFIER { "👭" IDENTIFIER } ), "✋" )
             
-            | ( "♾️" "👉" REL.EXPRESSION "👈" STATEMENT  (* while *)
+            | FUNCTION
+              | ( "♾️" "👉" REL.EXPRESSION "👈" STATEMENT  (* while *)
               | "🤔" "👉" REL.EXPRESSION "👈" { "🤷‍♂️" STATEMENT }*  (* if else *) 
               | BLOCK 
               | 🎁 ) (* return *)
-REL.EXPRESSION = EXPRESSION, { ("⬅️⬅️" | "👇" | "👆"), EXPRESSION } (* = < > *)
-EXPRESSION = TERM, { ("➕" | "➖" | "❤️"), TERM }
-TERM = FACTOR, { ("❌" | "➗" | "💔"), FACTOR }
-FACTOR = ("➕" | "➖" | "❗") FACTOR | "👉" REL.EXPRESSION "👈" | IDENTIFIER | STR | INT | "🎤" "👉" "👈" | FUNCTIONCALL;
+REL.EXPRESSION = EXPRESSION, { ("⬅️➡️" | "👇" | "👆"), EXPRESSION } (* == < > *)
+EXPRESSION = TERM, { ("➕" | "➖" | "🚻" | "🖇️"), TERM } (* + - or concat *)
+TERM = FACTOR, { ("❌" | "➗" | "🤝"), FACTOR } (* mult div and *)
+FACTOR = ("➕" | "➖" | "❗") FACTOR | "👉" REL.EXPRESSION "👈" | IDENTIFIER | QUOTATION STR QUOTATION | INT | "⏺️" | FUNCTIONCALL;
 TYPE = 🔠
        |🔢
 STR = { (LETTER | DIGIT ) }
@@ -20,3 +22,4 @@ INT = DIGIT { DIGIT }
 IDENTIFIER = LETTER {( LETTER | DIGIT | _ )}
 DIGIT = 0️⃣ | 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣ | 5️⃣ | 6️⃣ | 7️⃣ | 8️⃣ | 9️⃣
 LETTER = a | b | ... | z | 🅰️ | 🅱️ | ... | Z
+QUOTATION = "
