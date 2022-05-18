@@ -19,13 +19,6 @@ class Parser():
         )
 
     def parse(self):
-        @self.pg.production('expression : NUM')
-        def expression_number(p):
-            # p is a list of the pieces matched by the right hand side of the
-            # rule
-            return IntVal(p[0].getstr())
-
-    def parse(self):
         @self.pg.production('program : statement_list')
         def program(p):
             # print("teste")
