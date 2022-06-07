@@ -4,21 +4,24 @@ FUNCTIONCALL = IDENTIFIER "👉" {TYPE IDENTIFIER { "👭" TYPE IDENTIFIER } } "
 BLOCK = "📥" STATEMENT "📤" (* { } *)
 STATEMENT = ( (IDENTIFIER "⬅️" REL.EXPRESSION
               | "▶️" "👉" REL.EXPRESSION "👈"  (* print *)
-              | TYPE IDENTIFIER { "👭" IDENTIFIER } ), "✋" )
+              | TYPE IDENTIFIER { "👭" IDENTIFIER } 
+		  | FUNCTIONCALL), "✋" )
             
             | FUNCTION
-              | ( "♾️" "👉" REL.EXPRESSION "👈" BLOCK  (* while *)
+              | "♾️" "👉" REL.EXPRESSION "👈" BLOCK  (* while *)
               | "🤔" "👉" REL.EXPRESSION "👈" BLOCK { "🤷‍♂️" BLOCK }*  (* if else *) 
-              | 🎁 ) (* return *)
+              | ↩️  (* return *)
+		  | FUNCTION
 REL.EXPRESSION = EXPRESSION, { ("⬅️➡️" | "👇" | "👆"), EXPRESSION } (* == < > *)
 EXPRESSION = TERM, { ("➕" | "➖" | "🚻" | "🖇️"), TERM } (* + - or concat *)
 TERM = FACTOR, { ("❌" | "➗" | "🤝"), FACTOR } (* mult div and *)
 FACTOR = ("➕" | "➖" | "❗") FACTOR | "👉" REL.EXPRESSION "👈" | IDENTIFIER | QUOTATION STR QUOTATION | INT | "⏺️" | FUNCTIONCALL;
 TYPE = 🔠
        |🔢
+       |🏧
 STR = {(LETTER | DIGIT)+}
 INT = DIGIT { DIGIT }
 IDENTIFIER = LETTER {( LETTER | DIGIT | _ )}
-DIGIT = 0️⃣ | 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣ | 5️⃣ | 6️⃣ | 7️⃣ | 8️⃣ | 9️⃣
-LETTER = a | b | ... | z | 🅰️ | 🅱️ | ... | Z
+DIGIT = 1|2|3|4|5|6|7|8|9|0
+LETTER = a | b | ... | z |  A | B | ... | Z
 QUOTATION = "
