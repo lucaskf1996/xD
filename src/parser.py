@@ -1,7 +1,7 @@
 from rply import ParserGenerator
-from ast import (IntVal, BinOp, IfOp, UnOp, StrVal,
-                 NoOp, IdOp, PrintOp, AssignOp,
-                 WhileOp, IfOp, VarDec, Statements, ScanOp)#, Function)
+from ast import (IntVal, BinOp, IfOp, UnOp, StrVal, Arguments,
+                 NoOp, IdOp, PrintOp, AssignOp, FuncDec, FuncCall,
+                 WhileOp, IfOp, VarDec, Statements, ScanOp, ReturnOp)
 
 
 class Parser():
@@ -13,8 +13,8 @@ class Parser():
              'MORE', 'LESS', 'EQUAL', 'NOT', #4
              'OB', 'CB', 'SC', 'BOOLEQUAL', #4
              'ID', 'SCANF', 'ELSE', 'PRINTF', 'WHILE',  #5
-             'OR', 'AND', 'TSTR',# 'COMMA',# 'QUOTE', #5
-             'CONCAT', 'TINT'
+             'OR', 'AND', 'TSTR', 'COMMA',# 'QUOTE', #5
+             'CONCAT', 'TINT', 'TVOID', "RETURN",
              ]
         )
 
@@ -33,19 +33,9 @@ class Parser():
             p[0].add_child(p[1])
             return p[0]
 
-        @self.pg.production('statement : TINT ID SC')
-        @self.pg.production('statement : TSTR ID SC')
+        @self.pg.production('statement : type ID SC')
         def var_dec(p):
-            return VarDec(p[0].gettokentype(), p[1].getstr())
-
-        # @self.pg.production('statement : TINT ID id_list SC')
-        # @self.pg.production('statement : TSTR ID id_list SC')
-        # def var_dec(p):
-        #     return VarDec(p[0].gettokentype(), p[1].getstr())
-
-        # @self.pg.production("id_list : COMMA ID")
-        # def id_list_rest(p):
-        #     return VarDec
+            return VarDec(p[0], p[1].getstr())
 
         @self.pg.production('statement : IF OP rel_expr CP block')
         def statement_if(p):
@@ -57,13 +47,21 @@ class Parser():
             children = [p[2], p[4]]
             return WhileOp(children)
 
-        # @self.pg.production('statement : function')
-        # def statement_if(p):
-        #     return p[0]
-        
-        # @self.pg.production('fucntion : TYPE ID OP args_list CP block')
-        # def statement_if(p):
-        #     return p[0]
+        @self.pg.production('statement : function_call SC')
+        def statementFuncCall(p):
+            return p[0]
+
+        @self.pg.production('statement : function_declare')
+        def statementFuncDeclare(p):
+            return p[0]
+
+        @self.pg.production('statement : RETURN OP CP SC')
+        def statement_return(p):
+            return ReturnOp(None)
+
+        @self.pg.production('statement : RETURN OP rel_expr CP SC')
+        def statement_return(p):
+            return ReturnOp(p[2])
 
         @self.pg.production('statement : IF OP rel_expr CP block ELSE block')
         def statement_if(p):
@@ -144,6 +142,10 @@ class Parser():
         def identifier(p):
             return IdOp(p[0].getstr())
 
+        @self.pg.production('factor : ID OP rel_expr CP')
+        def identifier(p):
+            return IdOp(p[0].getstr())
+
         @self.pg.production('factor : OP rel_expr CP')
         def factor_parenthesis(p):
             return p[1]
@@ -168,9 +170,57 @@ class Parser():
         def not_op(p):
             return ScanOp()
         
+        @self.pg.production('factor : function_call')
+        def factorFuncCall(p):
+            return p[0]
+
+        @self.pg.production('function_declare : type ID OP CP block')
+        def functionDeclare(p):
+            return FuncDec([p[0], p[1].getstr()], [], p[4])
+
+        @self.pg.production('function_declare : type ID OP args_decl CP block')
+        def functionDeclare(p):
+            return FuncDec([p[0], p[1].getstr()], p[3], p[5])
+        
+        @self.pg.production('function_call : ID OP CP')
+        def functionCall(p):
+            return FuncCall(p[0].getstr(), [])
+
+        @self.pg.production('function_call : ID OP args_list CP')
+        def functionCall(p):
+            return FuncCall(p[0].getstr(), p[3])
+
         @self.pg.production('block : OB statement_list CB')
         def block(p):
             return p[1]
+
+        @self.pg.production('args_list : rel_expr')
+        def arg_list(p):
+            args = Arguments()
+            args.addChild(p[0])
+            return args
+
+        @self.pg.production('args_list : args_list COMMA rel_expr')
+        def arg_list_more(p):
+            p[0].addChild(p[2])
+            return p[0]
+
+        @self.pg.production('args_decl : type ID')
+        def arg_decl(p):
+            args = Arguments()
+            args.addChild(p[0])
+            return args
+
+        @self.pg.production('args_decl : args_decl COMMA type ID')
+        def arg_decl_more(p):
+            p[0].addChild(VarDec(p[1], p[2].getstr()))
+            return p[0]
+
+        @self.pg.production('type : TINT')
+        @self.pg.production('type : TVOID')
+        @self.pg.production('type : TSTR')
+        def typeId(p):
+            return p[0].gettokentype()
 
         @self.pg.error
         def error_handle(token):

@@ -15,6 +15,7 @@ class LexerGen():
         self.lexer.add('CP', '👈', flags = re.UNICODE)
         self.lexer.add('TSTR', '🔠', flags = re.UNICODE)
         self.lexer.add('TINT', '🔢', flags = re.UNICODE)
+        self.lexer.add('TVOID', '🏧', flags = re.UNICODE)
         self.lexer.add('BOOLEQUAL', '⬅️➡️', flags = re.UNICODE)
         self.lexer.add('AND', '🤝', flags = re.UNICODE)
         self.lexer.add('OR', '🚻', flags = re.UNICODE)
@@ -31,6 +32,7 @@ class LexerGen():
         self.lexer.add('IF', '🤔', flags = re.UNICODE)
         self.lexer.add('NOT', '🙅', flags = re.UNICODE)
         self.lexer.add('ELSE', '🤷', flags = re.UNICODE)
+        self.lexer.add('RETURN', '↩️', flags = re.UNICODE)
         self.lexer.ignore('\s+')
         self.lexer.ignore('\n')
     
