@@ -4,7 +4,7 @@ class LexerGen():
     def __init__(self):
         self.lexer = LexerGenerator()
         self.lexer.add('NUM', '\d+')
-        self.lexer.add('STR', '"[a-zA-Z0-9]*"')
+        self.lexer.add('STR', '🅰️[a-zA-Z0-9]*🅱️')
         self.lexer.add('PLUS', '➕', flags = re.UNICODE)
         self.lexer.add('MINUS', '➖', flags = re.UNICODE)
         self.lexer.add('MULT', '❌', flags = re.UNICODE)

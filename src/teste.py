@@ -19,6 +19,8 @@ def code_cleanup(text): # FROM https://stackoverflow.com/questions/241327/remove
     return re.sub(pattern, replacer, text)
 
 if __name__ == "__main__":
+    if(sys.argv[1].rsplit('.', 1)[-1] != "xD"):
+        raise Exception("not a .xD")
     with open(sys.argv[1], 'r') as f:
         contents = f.read()
 

@@ -142,10 +142,6 @@ class Parser():
         def identifier(p):
             return IdOp(p[0].getstr())
 
-        @self.pg.production('factor : ID OP rel_expr CP')
-        def identifier(p):
-            return IdOp(p[0].getstr())
-
         @self.pg.production('factor : OP rel_expr CP')
         def factor_parenthesis(p):
             return p[1]
@@ -167,7 +163,7 @@ class Parser():
             return UnOp(p[0].gettokentype(), p[1])
 
         @self.pg.production('factor : SCANF OP CP')
-        def not_op(p):
+        def scanOp(p):
             return ScanOp()
         
         @self.pg.production('factor : function_call')
@@ -176,7 +172,7 @@ class Parser():
 
         @self.pg.production('function_declare : type ID OP CP block')
         def functionDeclare(p):
-            return FuncDec([p[0], p[1].getstr()], [], p[4])
+            return FuncDec([p[0], p[1].getstr()], Arguments(), p[4])
 
         @self.pg.production('function_declare : type ID OP args_decl CP block')
         def functionDeclare(p):
@@ -184,11 +180,11 @@ class Parser():
         
         @self.pg.production('function_call : ID OP CP')
         def functionCall(p):
-            return FuncCall(p[0].getstr(), [])
+            return FuncCall(p[0].getstr(), Arguments())
 
         @self.pg.production('function_call : ID OP args_list CP')
         def functionCall(p):
-            return FuncCall(p[0].getstr(), p[3])
+            return FuncCall(p[0].getstr(), p[2])
 
         @self.pg.production('block : OB statement_list CB')
         def block(p):
@@ -208,12 +204,12 @@ class Parser():
         @self.pg.production('args_decl : type ID')
         def arg_decl(p):
             args = Arguments()
-            args.addChild(p[0])
+            args.addChild(VarDec(p[0], p[1].getstr()))
             return args
 
         @self.pg.production('args_decl : args_decl COMMA type ID')
         def arg_decl_more(p):
-            p[0].addChild(VarDec(p[1], p[2].getstr()))
+            p[0].addChild(VarDec(p[2], p[3].getstr()))
             return p[0]
 
         @self.pg.production('type : TINT')

@@ -109,7 +109,10 @@ class IntVal(BaseBox):
 
 class StrVal(BaseBox):
     def __init__(self, value):
-        self.value = value
+        if(len(value) > 2):
+            self.value = value[2:-2]
+        else:
+            self.value = ""
 
     def eval(self, symbolTable, funcTable):
         return (self.value, "str")
@@ -198,7 +201,7 @@ class VarDec(BaseBox):
         symbolTable.create(self.children, self.value)
 
 class ScanOp(BaseBox):
-    def __init__():
+    def __init__(self):
         self.value = "scan"
     
     def eval(self, symbolTable, funcTable):
@@ -247,21 +250,21 @@ class FuncCall(BaseBox):
     
     def eval(self, symbolTable, funcTable):
         func = funcTable.getValue(self.value)
-        # print(func)
         ids = []
-        if len(self.args) == len(func[0].args):
-            if(len(self.args) == 0):
+        if len(self.args.children) == len(func[0].args.children):
+            if(len(self.args.children) == 0):
                 returned = func[0].block.eval(self.LocalST, funcTable)
                 if(returned[1] == func[1]):
                     return returned
                 else:
                     raise Exception(f"tried to return {returned[1]} but function has type {func[1]}")
             else:
-                for arg in func[0].args:
+                for arg in func[0].args.children:
                     arg.eval(self.LocalST, funcTable)
-                    ids.append(arg.children[0].value)
-                for arg, id in zip(self.args, ids):
+                    ids.append(arg.children)
+                for arg, id in zip(self.args.children, ids):
                     self.LocalST.setValue(id, arg.eval(symbolTable, funcTable))
+                returned = func[0].block.eval(self.LocalST, funcTable)
                 if(returned[1] == func[1]):
                     return returned
                 else:
